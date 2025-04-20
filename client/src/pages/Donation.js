@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Layout from "../components/shared/Layout/Layout";
 import API from "../services/API";
 import { useSelector } from "react-redux";
@@ -9,7 +9,7 @@ const Donation = () => {
   const [data, setData] = useState([]);
 
   // Find donor records
-  const getDonors = async () => {
+  const getDonors = useCallback(async () => {
     try {
       const { data } = await API.post("/inventory/get-inventory-hospital", {
         filters: {
@@ -24,11 +24,11 @@ const Donation = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     getDonors();
-  }, []);
+  }, [getDonors]);
 
   return (
     <Layout>
@@ -37,8 +37,7 @@ const Donation = () => {
           <thead>
             <tr>
               <th scope="col">Blood Group</th>
-              <th scope="col">Inventory Type</th>{" "}
-              {/* Fixed typo from TYpe to Type */}
+              <th scope="col">Inventory Type</th>
               <th scope="col">Quantity</th>
               <th scope="col">Email</th>
               <th scope="col">Date</th>

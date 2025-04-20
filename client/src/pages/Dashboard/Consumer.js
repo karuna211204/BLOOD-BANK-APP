@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Layout from "../../components/shared/Layout/Layout";
 import moment from "moment";
 import API from "../../services/API";
@@ -9,7 +9,7 @@ const Consumer = () => {
   const [data, setData] = useState([]);
 
   // Fetch donor records
-  const getDonors = async () => {
+  const getDonors = useCallback(async () => {
     try {
       const { data } = await API.post("/inventory/get-inventory-hospital", {
         filters: {
@@ -24,11 +24,11 @@ const Consumer = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     getDonors();
-  }, []);
+  }, [getDonors]);
 
   return (
     <Layout>
