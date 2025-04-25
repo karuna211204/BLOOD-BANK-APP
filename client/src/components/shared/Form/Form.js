@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import InputType from "./InputType";
 import { Link } from "react-router-dom";
 import { handleLogin, handleRegister } from "../../../services/authService";
+import { useNavigate } from "react-router-dom";
 
 const Form = ({ formType, submitBtn, formTitle }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("donor");
@@ -18,7 +20,7 @@ const Form = ({ formType, submitBtn, formTitle }) => {
       <form
         onSubmit={(e) => {
           if (formType === "login")
-            return handleLogin(e, email, password, role);
+            return handleLogin(e, email, password, role, navigate);
           else if (formType === "register")
             return handleRegister(
               e,
@@ -30,7 +32,8 @@ const Form = ({ formType, submitBtn, formTitle }) => {
               organisationName,
               address,
               hospitalName,
-              website
+              website,
+              navigate
             );
         }}
       >

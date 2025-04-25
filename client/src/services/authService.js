@@ -1,19 +1,6 @@
-import { userLogin, userRegister } from "../redux/features/auth/authActions";
-import store from "../redux/store";
+import axios from "axios";
 
-export const handleLogin = (e, email, password, role) => {
-  e.preventDefault();
-  try {
-    if (!role || !email || !password) {
-      return alert("Please Privde All Feilds");
-    }
-    store.dispatch(userLogin({ email, password, role }));
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const handleRegister = (
+export const handleRegister = async (
   e,
   name,
   role,
@@ -23,24 +10,31 @@ export const handleRegister = (
   organisationName,
   address,
   hospitalName,
-  website
+  website,
+  navigate // 👈 add this
 ) => {
   e.preventDefault();
   try {
-    store.dispatch(
-      userRegister({
-        name,
-        role,
-        email,
-        password,
-        phone,
-        organisationName,
-        address,
-        hospitalName,
-        website,
-      })
-    );
+    const { data } = await axios.post("/api/v1/auth/register", {
+      name,
+      role,
+      email,
+      password,
+      phone,
+      organisationName,
+      address,
+      hospitalName,
+      website,
+    });
+
+    if (data?.success) {
+      alert("Registration successful!"); // Use alert for success
+      navigate("/login"); // ✅ Navigate to login page after success
+    } else {
+      alert(data.message || "Registration failed"); // Use alert for failure
+    }
   } catch (error) {
     console.log(error);
+    alert("Something went wrong!"); // Use alert for errors
   }
 };
